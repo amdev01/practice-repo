@@ -25,17 +25,17 @@ def encode(file_to_encode, encode_count):
     print("Encoded once")
     if (encode_count > 1):
         for k in range(encode_count):
-            encoded_flag = base64.b64encode(encoded_flag)
-            print("Encoded "+ str(k+1) + " times")
-            if (k < 7): # debug print to see if encoding is correct
-              print(encoded_flag.decode('utf8'))
+            encoded_flag = base64.b64encode(encoded_flag) # save encoded string to same var
+            # print("Encoded "+ str(k+1) + " times")
+            # if (k < 7): # debug print to see if encoding is correct
+            #  print(encoded_flag.decode('utf8'))
     
     # create a new file or open existsing one
     try: # try create a new file
         o_encoded_f = open("o_encoded_f.txt", "x")
     except: # open if exists
         o_encoded_f = open("o_encoded_f.txt", "w")
-    o_encoded_f.write(str(encoded_flag))
+    o_encoded_f.write(str(encoded_flag)) # write to file
     o_encoded_f.close()
 
 # decoding
@@ -48,9 +48,9 @@ def decode(file_to_decode, decode_count):
     if (decode_count > 1):
         for k in range(decode_count):
             decoded_flag = base64.b64decode(decoded_flag)
-            print("Decoded "+ str(k+1) + " times")
-            if (k > decode_count-7): # debug print to see if encoding is correct
-                print(decoded_flag.decode('utf8'))
+            # print("Decoded "+ str(k+1) + " times")
+            # if (k > decode_count-7): # debug print to see if encoding is correct
+            #    print(decoded_flag.decode('utf8'))
 
     #print("Decoded flag: %s " % f_to_decode.decode('utf8'))
     #print("Decoded flag: %s " % f_s_decode)
@@ -61,54 +61,48 @@ def decode(file_to_decode, decode_count):
     o_decoded_f.write(str(decoded_flag))
     o_decoded_f.close()
 
-def cli():
-    print (sys.argv[1:])
+def arg_count():
+    if sys.argv[2] in ["-c", "--count"]:
+            print(sys.argv[2])
+            if len(sys.argv) < 4: # check if correct number or args
+               print(usage)
+               sys.exit(1)
+               check_file_path(sys.argv[3])
+            return True
+            # pass file name and decode count
+    else:
+        check_file_path(sys.argv[2])
+        return False
 
+def check_file_path(f_name):
+    if not os.path.isfile(f_name): # check if file exists
+        print("file not found: %s" % f_name)
+        sys.exit(1)
+
+def cli():
+    # print (sys.argv[1:])
     if len(sys.argv) < 2: # exit if no arguments
         print(usage)
         sys.exit(1)
-    if sys.argv[1] in ["-h", "--help"]: # print help meny
+    if sys.argv[1] in ["-h", "--help"]: # print help menu
         print(usage)
         sys.exit(0)
     if sys.argv[1] in ["-e", "--encode"]: # set encoding vars
         if len(sys.argv) < 3: # check if correct number or args
             print(usage)
             sys.exit(1)
-        if sys.argv[2] in ["-c", "--count"]:
-            print(sys.argv[2])
-            if len(sys.argv) < 4: # check if correct number or args
-               print(usage)
-               sys.exit(1)
-            file_name = sys.argv[3]
-            count = int(sys.argv[4])
-            # pass file name and encode count
+        if (arg_count()): # check if count arg present
+            encode(sys.argv[3], int(sys.argv[4])) # call encode N times
         else:
-            file_name = sys.argv[2]
-            count = 1
-            # one action
+            encode(sys.argv[2], 1) # call encode N times
     if sys.argv[1] in ["-d", "--decode"]: # set decoding vars
         if len(sys.argv) < 3: # check if correct number or args
             print(usage)
             sys.exit(1)
-        if sys.argv[2] in ["-c", "--count"]:
-            print(sys.argv[2])
-            if len(sys.argv) < 4: # check if correct number or args
-               print(usage)
-               sys.exit(1)
-            file_name = sys.argv[3]
-            count = int(sys.argv[4])
-            # pass file name and decode count
+        if (arg_count()): # check if count arg present
+            decode(sys.argv[3], int(sys.argv[4])) # call decode N times
         else:
-            file_name = sys.argv[2]
-            count = 1
-            # one action
-    if not os.path.isfile(file_name): # check if file exists
-        print("file not found: %s" % file_name)
-        sys.exit(1)
-    if sys.argv[1] in ["-e", "--encode"]:
-        encode(file_name, count) # call encode
-    if sys.argv[1] in ["-d", "--decode"]:
-        decode(file_name, count) # call decode 
+            decode(sys.argv[2], 1) # call encode N times
 
 if __name__ == '__main__':
     cli()
