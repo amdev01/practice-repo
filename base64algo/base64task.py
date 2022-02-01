@@ -29,6 +29,7 @@ def encode(file_to_encode, encode_count):
             print("Encoded "+ str(k+1) + " times")
             if (k < 7): # debug print to see if encoding is correct
               print(encoded_flag.decode('utf8'))
+    
     # create a new file or open existsing one
     try: # try create a new file
         o_encoded_f = open("o_encoded_f.txt", "x")
@@ -39,12 +40,17 @@ def encode(file_to_encode, encode_count):
 
 # decoding
 def decode(file_to_decode, decode_count):
-    f_d = open(file_to_decode, "r").read()
+    f_d = open(file_to_decode, "r").read() # get text from file and store it as a string
     #f_s_decode = f_to_decode.read()
     #decoded_flag = bytes(f_s_decode, "UTF-8")
 
-    for k in range(decode_count):
-        decoded_flag = base64.b64decode(f_d)
+    decoded_flag = base64.b64decode(f_d)
+    if (decode_count > 1):
+        for k in range(decode_count):
+            decoded_flag = base64.b64decode(decoded_flag)
+            print("Decoded "+ str(k+1) + " times")
+            if (k > decode_count-7): # debug print to see if encoding is correct
+                print(decoded_flag.decode('utf8'))
 
     #print("Decoded flag: %s " % f_to_decode.decode('utf8'))
     #print("Decoded flag: %s " % f_s_decode)
@@ -52,7 +58,7 @@ def decode(file_to_decode, decode_count):
         o_decoded_f = open("o_decoded_f.txt", "x")
     except: # open if exists
         o_decoded_f = open("o_decoded_f.txt", "w")
-    o_decoded_f.write(str(encoded_flag))
+    o_decoded_f.write(str(decoded_flag))
     o_decoded_f.close()
 
 def cli():
@@ -80,7 +86,7 @@ def cli():
             file_name = sys.argv[2]
             count = 1
             # one action
-    elif sys.argv[1] in ["-d", "--decode"]: # set decoding vars
+    if sys.argv[1] in ["-d", "--decode"]: # set decoding vars
         if len(sys.argv) < 3: # check if correct number or args
             print(usage)
             sys.exit(1)
@@ -93,7 +99,7 @@ def cli():
             count = int(sys.argv[4])
             # pass file name and decode count
         else:
-            file_name = sys.argv[3]
+            file_name = sys.argv[2]
             count = 1
             # one action
     if not os.path.isfile(file_name): # check if file exists
