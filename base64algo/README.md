@@ -43,6 +43,10 @@ The encoding is right so it can't be a corrupt base64 string
 > into the file and repeat untill flag is achieved. This is not an issue with this implementation,
 > not sure why
 
+UPDATE: The reason this happened is because I used "o_encoded50.txt" to try decoding on,
+this file was previously encoded with my program but it was bytes not a string so encoded string
+was wrapped in b'xxx'. Updated program to 
+
 Program output:
 ```
 ~$ rm -rf o_*

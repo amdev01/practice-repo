@@ -20,11 +20,11 @@ def decode_test(test_str):
 def encode(file_to_encode, encode_count):
     # encoding
     file_str = open(file_to_encode, "r").read() # get text from file and store it as a string
-    #b_flag = bytes(f_s, "UTF-8") # convert string to bytes[]
-    encoded_str = base64.b64encode(file_str) # encode flag for the first time
+    file_bytes = bytes(file_str, "UTF-8") # convert string to bytes[]
+    encoded_str = base64.b64encode(file_bytes) # encode flag for the first time
     print("Encoded once")
     if (encode_count > 1):
-        for k in range(encode_count):
+        for k in range(encode_count-1):
             encoded_str = base64.b64encode(encoded_str) # save encoded string to same var
             # print("Encoded "+ str(k+1) + " times")
             # if (k < 7): # debug print to see if encoding is correct
@@ -35,7 +35,7 @@ def encode(file_to_encode, encode_count):
         encoded_file_out = open("encoded_file_out.txt", "x")
     except: # open if exists
         encoded_file_out = open("encoded_file_out.txt", "w")
-    encoded_file_out.write(str(encoded_str)) # write to file
+    encoded_file_out.write(encoded_str.decode('utf-8')) # write to file
     encoded_file_out.close()
 
 # decoding
@@ -46,7 +46,7 @@ def decode(file_to_decode, decode_count):
 
     decoded_str = base64.b64decode(file_str)
     if (decode_count > 1):
-        for k in range(decode_count):
+        for k in range(decode_count-1):
             decoded_str = base64.b64decode(decoded_str)
             # print("Decoded "+ str(k+1) + " times")
             # if (k > decode_count-7): # debug print to see if encoding is correct
@@ -58,7 +58,7 @@ def decode(file_to_decode, decode_count):
         decoded_file_out = open("decoded_file_out.txt", "x")
     except: # open if exists
         decoded_file_out = open("decoded_file_out.txt", "w")
-    decoded_file_out.write(str(decoded_str))
+    decoded_file_out.write(decoded_str.decode('utf-8'))
     decoded_file_out.close()
 
 # check if file specified in args exists
