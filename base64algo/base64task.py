@@ -11,13 +11,13 @@ Usage: base64task.py [-hced] "<file_to_encode>" <n>
   -c/--count n          - <optional> specify <n> to encode/decode <file_to_encode>\
 """
 
-def encode_test(test_str):
+def encode_test(test_str: bytes):
     print("Test Base64 encoded once: %s" % base64.b64encode(test_str)) # print 1st base64 encoding
 
-def decode_test(test_str):
+def decode_test(test_str: bytes):
     print("Test Base64 decoded once: %s" % base64.b64decode(test_str)) # print 1st base64 decoding
 
-def encode(file_to_encode, encode_count):
+def encode(file_to_encode: str, encode_count: int):
     # encoding
     file_str = open(file_to_encode, "r").read() # get text from file and store it as a string
     file_bytes = bytes(file_str, "UTF-8") # convert string to bytes[]
@@ -39,7 +39,7 @@ def encode(file_to_encode, encode_count):
     encoded_file_out.close()
 
 # decoding
-def decode(file_to_decode, decode_count):
+def decode(file_to_decode: str, decode_count: int):
     file_str = open(file_to_decode, "r").read() # get text from file and store it as a string
     #f_s_decode = f_to_decode.read()
     #decoded_flag = bytes(f_s_decode, "UTF-8")
@@ -62,7 +62,7 @@ def decode(file_to_decode, decode_count):
     decoded_file_out.close()
 
 # check if file specified in args exists
-def check_file_path(f_name):
+def check_file_path(f_name: str):
     if not os.path.isfile(f_name): # check if file exists
         print("file not found: %s" % f_name)
         sys.exit(1)
